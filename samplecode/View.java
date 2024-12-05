@@ -1,7 +1,7 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import javax.swing.*;
 class View extends JFrame {
   private UIContext uiContext;
   private JPanel drawingPanel;
@@ -15,6 +15,7 @@ class View extends JFrame {
   private JButton openButton;
   private JButton undoButton;
   private JButton redoButton;
+  private JButton moveButton;
   private static UndoManager undoManager;
     private String fileName;
   // other buttons to be added as needed;
@@ -98,6 +99,7 @@ class View extends JFrame {
     openButton= new OpenButton(undoManager, this);
     undoButton = new UndoButton(undoManager);
     redoButton = new RedoButton(undoManager);
+    moveButton = new MoveButton(undoManager, this, drawingPanel);
     buttonPanel.add(lineButton);
     buttonPanel.add(labelButton);
     buttonPanel.add(selectButton);
@@ -106,6 +108,7 @@ class View extends JFrame {
     buttonPanel.add(openButton);
     buttonPanel.add(undoButton);
     buttonPanel.add(redoButton);
+    buttonPanel.add(moveButton);
     this.setSize(600, 400);
   }
   public void refresh() {
