@@ -1,13 +1,15 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-public class LabelButton  extends JButton implements ActionListener {
+
+public class LabelButton extends JButton implements ActionListener {
   protected JPanel drawingPanel;
   protected View view;
   private KeyHandler keyHandler;
   private MouseHandler mouseHandler;
   private LabelCommand labelCommand;
   private UndoManager undoManager;
+
   public LabelButton(UndoManager undoManager, View jFrame, JPanel jPanel) {
     super("Label");
     this.undoManager = undoManager;
@@ -17,9 +19,11 @@ public class LabelButton  extends JButton implements ActionListener {
     drawingPanel = jPanel;
     keyHandler = new KeyHandler();
   }
+
   public void actionPerformed(ActionEvent event) {
     drawingPanel.addMouseListener(mouseHandler = new MouseHandler());
   }
+
   private class MouseHandler extends MouseAdapter {
     public void mouseClicked(MouseEvent event) {
       view.setCursor(new Cursor(Cursor.TEXT_CURSOR));
@@ -41,6 +45,7 @@ public class LabelButton  extends JButton implements ActionListener {
         labelCommand.addCharacter(event.getKeyChar());
       }
     }
+
     public void keyPressed(KeyEvent event) {
       if (event.getKeyCode() == KeyEvent.VK_ENTER) {
         view.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -52,9 +57,11 @@ public class LabelButton  extends JButton implements ActionListener {
         labelCommand.removeCharacter();
       }
     }
+
     public void focusGained(FocusEvent event) {
       drawingPanel.addKeyListener(this);
     }
+
     public void focusLost(FocusEvent event) {
       view.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
       drawingPanel.removeMouseListener(mouseHandler);

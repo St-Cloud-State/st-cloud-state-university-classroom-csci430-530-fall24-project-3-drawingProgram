@@ -1,40 +1,76 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PolygonCommand extends Command {
-    private Polygon polygon;
-    private ArrayList<Point> points = new ArrayList<>();
+    private List<Point> points;
+    private PolygonItem polygonItem;
+    private PolygonItem previewItem;
+    private boolean isComplete = false;
 
     public PolygonCommand() {
-        polygon = new Polygon();
+        points = new ArrayList<>();
     }
 
     public void addPoint(Point point) {
         points.add(point);
-        polygon.addPoint(point);
+        updatePreview();
+    }
+
+    private void updatePreview() {
+        if (points.size() >= 2) {
+            if (previewItem != null) {
+                model.removeItem(previewItem);
+            }
+            
+            Polygon previewPolygon = new Polygon(
+                points.stream().mapToInt(p -> p.x).toArray(),
+                points.stream().mapToInt(p -> p.y).toArray(),
+                points.size()
+            );
+            previewItem = new PolygonItem(previewPolygon);
+            model.addItem(previewItem);
+        }
     }
 
     public void execute() {
-        // No additional execution needed as the polygon is created on right-click
+        if (previewItem != null) {
+            model.removeItem(previewItem);
+            previewItem = null;
+        }
+        
+        if (points.size() >= 3) {
+            Polygon finalPolygon = new Polygon(
+                points.stream().mapToInt(p -> p.x).toArray(),
+                points.stream().mapToInt(p -> p.y).toArray(),
+                points.size()
+            );
+            polygonItem = new PolygonItem(finalPolygon);
+            model.addItem(polygonItem);
+        }
     }
 
     public boolean undo() {
-        if (polygon != null) {
-            model.removeItem(polygon);
+        if (polygonItem != null) {
+            model.removeItem(polygonItem);
             return true;
         }
         return false;
     }
 
     public boolean redo() {
-        if (polygon != null) {
-            model.addItem(polygon);
+        if (polygonItem != null) {
+            model.addItem(polygonItem);
             return true;
         }
         return false;
     }
 
-    public ArrayList<Point> getPoints() {
-        return points;
+    public boolean end() {
+        if (points.size() >= 3) {
+            isComplete = true;
+            return true;
+        }
+        return false;
     }
 } 
