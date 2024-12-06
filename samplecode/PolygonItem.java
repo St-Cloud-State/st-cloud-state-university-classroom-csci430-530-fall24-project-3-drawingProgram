@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class PolygonItem extends Item {
-    private Polygon polygon;
+    private final Polygon polygon;
 
     public PolygonItem(Polygon polygon) {
         this.polygon = polygon;
